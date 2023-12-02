@@ -10,33 +10,32 @@ class Day(val input: Scanner) {
         "blue" to 14
     )
 
-    fun starOne(): Int = parseInput(input).fold(0) { acc, line ->
+    fun starOne(): Int = parseInput(input).sumOf { line ->
         val (id, game) = line.split(":")
         val (red, green, blue) = getValues(game)
-        acc + (if (checkHand(red, green, blue)) id.split(" ")[1].toInt() else 0)
+        if (checkHand(red, green, blue)) id.split(" ")[1].toInt() else 0
     }
 
-    fun starTwo(): Int = parseInput(input).fold(0) { acc, line ->
+    fun starTwo(): Int = parseInput(input).sumOf { line ->
         val (_, game) = line.split(":")
         val (red, green, blue) = getValues(game)
-        acc + red * green * blue
+        red * green * blue
     }
 
-    private fun getValues(game: String): List<Int> {
-        var (red, green, blue) = mutableListOf(0, 0, 0)
-        val hands = game.split(";")
-        hands.forEach { hand ->
+    private fun getValues(game: String): Triple<Int, Int, Int> {
+        var (red, green, blue) = Triple(0, 0, 0)
+        game.split(";").forEach { hand ->
             hand.split(",").forEach { cube ->
                 val (valueStr, colour) = cube.trim().split(" ")
                 val value = valueStr.toInt()
                 when (colour) {
-                    "red" -> red = red.coerceAtLeast(value)
-                    "green" -> green = green.coerceAtLeast(value)
-                    "blue" -> blue = blue.coerceAtLeast(value)
+                    "red" -> red = maxOf(red, value)
+                    "green" -> green = maxOf(green, value)
+                    "blue" -> blue = maxOf(blue, value)
                 }
             }
         }
-        return listOf(red, green, blue)
+        return Triple(red, green, blue)
     }
 
     private fun checkHand(red: Int, green: Int, blue: Int): Boolean {
