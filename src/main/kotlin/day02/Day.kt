@@ -25,9 +25,8 @@ class Day(val input: Scanner) {
     private fun getValues(game: String): List<Int> {
         var (red, green, blue) = mutableListOf(0, 0, 0)
         val hands = game.split(";")
-        for (hand in hands) {
-            val cubes = hand.split(",")
-            for (cube in cubes) {
+        hands.forEach { hand ->
+            hand.split(",").forEach { cube ->
                 val (valueStr, colour) = cube.trim().split(" ")
                 val value = valueStr.toInt()
                 when (colour) {
