@@ -1,6 +1,7 @@
 package day01
 
 import java.util.Scanner
+import parseInput
 
 class Day(val input: Scanner) {
     private val numbers = mapOf(
@@ -14,7 +15,6 @@ class Day(val input: Scanner) {
         "eight" to 8,
         "nine" to 9
     )
-    private var iterations = 0
 
     fun starOne(): Int = parseInput(input).fold(0) { acc, curr ->
         val firstDigit = curr.first { it.isDigit() }
@@ -31,11 +31,9 @@ class Day(val input: Scanner) {
     private fun getDigit(curr: String, isReversed: Boolean): Int {
         for (i in curr.indices) {
             if (curr[i].isDigit()) {
-                iterations++
                 return curr[i].digitToInt()
             }
             for (j in 0..<i) {
-                iterations++
                 var substr = curr.substring(j..i)
 
                 if (isReversed) {
@@ -48,11 +46,5 @@ class Day(val input: Scanner) {
             }
         }
         return 0
-    }
-
-    private fun parseInput(input: Scanner) = sequence {
-        while (input.hasNext()) {
-            yield(input.nextLine())
-        }
     }
 }
