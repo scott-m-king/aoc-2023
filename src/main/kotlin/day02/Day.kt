@@ -23,7 +23,7 @@ class Day(val input: Scanner) {
     }
 
     private fun getValues(game: String): Triple<Int, Int, Int> {
-        var (red, green, blue) = Triple(0, 0, 0)
+        var (red, green, blue) = mutableListOf(0, 0, 0)
         game.split(";").forEach { hand ->
             hand.split(",").forEach { cube ->
                 val (valueStr, colour) = cube.trim().split(" ")
