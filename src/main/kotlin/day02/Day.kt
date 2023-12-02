@@ -10,37 +10,37 @@ class Day(val input: Scanner) {
         "blue" to 14
     )
 
-    fun starOne(): Int {
-        val input = parseInput(input)
-        var result = 0
-        for (line in input) {
-            var (red, green, blue) = mutableListOf(0, 0, 0)
-            val (id, game) = line.split(":")
-            val hands = game.split(";")
-            for (hand in hands) {
-                val cubes = hand.split(",")
-                for (cube in cubes) {
-                    val (valueStr, colour) = cube.trim().split(" ")
-                    val value = valueStr.toInt()
-                    when (colour) {
-                        "red" -> red = red.coerceAtLeast(value)
-                        "green" -> green = green.coerceAtLeast(value)
-                        "blue" -> blue = blue.coerceAtLeast(value)
-                    }
+    fun starOne(): Int = parseInput(input).fold(0) { acc, line ->
+        val (id, game) = line.split(":")
+        val (red, green, blue) = getValues(game)
+        acc + (if (checkHand(red, green, blue)) id.split(" ")[1].toInt() else 0)
+    }
+
+    fun starTwo(): Int = parseInput(input).fold(0) { acc, line ->
+        val (_, game) = line.split(":")
+        val (red, green, blue) = getValues(game)
+        acc + red * green * blue
+    }
+
+    private fun getValues(game: String): List<Int> {
+        var (red, green, blue) = mutableListOf(0, 0, 0)
+        val hands = game.split(";")
+        for (hand in hands) {
+            val cubes = hand.split(",")
+            for (cube in cubes) {
+                val (valueStr, colour) = cube.trim().split(" ")
+                val value = valueStr.toInt()
+                when (colour) {
+                    "red" -> red = red.coerceAtLeast(value)
+                    "green" -> green = green.coerceAtLeast(value)
+                    "blue" -> blue = blue.coerceAtLeast(value)
                 }
             }
-            if (checkHand(red, green, blue)) {
-                result += id.split(" ")[1].toInt()
-            }
         }
-        return result
+        return listOf(red, green, blue)
     }
 
     private fun checkHand(red: Int, green: Int, blue: Int): Boolean {
         return red <= mapping["red"]!! && green <= mapping["green"]!! && blue <= mapping["blue"]!!
-    }
-
-    fun starTwo() {
-        TODO()
     }
 }
