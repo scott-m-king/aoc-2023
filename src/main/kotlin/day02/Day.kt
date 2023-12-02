@@ -29,9 +29,9 @@ class Day(val input: Scanner) {
                 val (valueStr, colour) = cube.trim().split(" ")
                 val value = valueStr.toInt()
                 when (colour) {
-                    "red" -> red = maxOf(red, value)
+                    "red"   -> red = maxOf(red, value)
                     "green" -> green = maxOf(green, value)
-                    "blue" -> blue = maxOf(blue, value)
+                    "blue"  -> blue = maxOf(blue, value)
                 }
             }
         }
