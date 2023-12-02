@@ -38,7 +38,6 @@ class Day(val input: Scanner) {
         return Triple(red, green, blue)
     }
 
-    private fun checkHand(red: Int, green: Int, blue: Int): Boolean {
-        return red <= mapping["red"]!! && green <= mapping["green"]!! && blue <= mapping["blue"]!!
-    }
+    private fun checkHand(red: Int, green: Int, blue: Int): Boolean =
+        red <= mapping["red"]!! && green <= mapping["green"]!! && blue <= mapping["blue"]!!
 }
