@@ -8,8 +8,8 @@ class Day(val input: Scanner) {
 
     fun starOne(): Int {
         val matrix = parseInput(input).toList()
+        val sb = StringBuilder()
         return matrix.foldIndexed(0) { row, acc, line ->
-            val sb = StringBuilder()
             "$line.".foldIndexed(acc) { col, result, char ->
                 if (char.isDigit()) {
                     sb.append(char)
