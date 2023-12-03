@@ -8,26 +8,24 @@ class Day(val input: Scanner) {
 
     fun starOne(): Int {
         val matrix = parseInput(input).toList()
-        var result = 0
-
-        matrix.forEachIndexed { row, line ->
+        return matrix.foldIndexed(0) { row, acc, line ->
             val sb = StringBuilder()
-            "$line.".forEachIndexed { col, char ->
+            "$line.".foldIndexed(acc) { col, result, char ->
                 if (char.isDigit()) {
                     sb.append(char)
+                    result
                 } else {
                     val num = sb.toString().toIntOrNull()
-                    if (num != null) {
-                        if (checkSurrounding(matrix, row, col - sb.length, sb.length)) {
-                            result += num
-                        }
-                    }
+                    val len = sb.length
                     sb.clear()
+                    result + if (num != null && checkSurrounding(matrix, row, col - len, len)) {
+                        num
+                    } else {
+                        0
+                    }
                 }
             }
         }
-
-        return result
     }
 
     private fun checkSurrounding(matrix: List<String>, row: Int, col: Int, size: Int): Boolean {
