@@ -28,14 +28,10 @@ class Day(val input: Scanner) {
         }
     }
 
-    private fun checkSurrounding(matrix: List<String>, row: Int, col: Int, size: Int): Boolean {
-        getSurrounding(matrix, row, col, size).forEach { (cell) ->
-            if (!cell.isDigit() && cell != '.') {
-                return true
-            }
+    private fun checkSurrounding(matrix: List<String>, row: Int, col: Int, size: Int): Boolean =
+        getSurrounding(matrix, row, col, size).any { (cell) ->
+            !cell.isDigit() && cell != '.'
         }
-        return false
-    }
 
     fun starTwo(): Int {
         val input = parseInput(input).toList()
