@@ -29,7 +29,7 @@ class Day(val input: Scanner) {
     }
 
     private fun checkSurrounding(matrix: List<String>, row: Int, col: Int, size: Int): Boolean {
-        for ((cell) in getSurrounding(matrix, row, col, size)) {
+        getSurrounding(matrix, row, col, size).forEach { (cell) ->
             if (!cell.isDigit() && cell != '.') {
                 return true
             }
@@ -67,7 +67,7 @@ class Day(val input: Scanner) {
     }
 
     private fun getGearCoords(matrix: List<String>, row: Int, col: Int, size: Int): Pair<Int, Int>? {
-        for ((cell, x, y) in getSurrounding(matrix, row, col, size)) {
+        getSurrounding(matrix, row, col, size).forEach { (cell, x, y) ->
             if (cell == '*') {
                 return x to y
             }
