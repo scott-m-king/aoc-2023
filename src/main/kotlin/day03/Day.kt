@@ -1,6 +1,7 @@
 package day03
 
 import parseInput
+import java.lang.IndexOutOfBoundsException
 import java.lang.StringBuilder
 import java.util.Scanner
 
@@ -77,8 +78,10 @@ class Day(val input: Scanner) {
                 for (c in -1..1) {
                     val x = row + r
                     val y = i + col + c
-                    if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.size) {
+                    try {
                         yield(Triple(matrix[x][y], x, y))
+                    } catch (_: IndexOutOfBoundsException) {
+                        // haha
                     }
                 }
             }
