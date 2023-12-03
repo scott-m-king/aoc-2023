@@ -7,10 +7,10 @@ import java.util.Scanner
 class Day(val input: Scanner) {
 
     fun starOne(): Int {
-        val input = parseInput(input).toList()
+        val matrix = parseInput(input).toList()
         var result = 0
 
-        input.forEachIndexed { row, line ->
+        matrix.forEachIndexed { row, line ->
             val sb = StringBuilder()
             "$line.".forEachIndexed { col, char ->
                 if (char.isDigit()) {
@@ -18,7 +18,7 @@ class Day(val input: Scanner) {
                 } else {
                     val num = sb.toString().toIntOrNull()
                     if (num != null) {
-                        if (checkSurrounding(input, row, col - sb.length, sb.length)) {
+                        if (checkSurrounding(matrix, row, col - sb.length, sb.length)) {
                             result += num
                         }
                     }
@@ -31,18 +31,9 @@ class Day(val input: Scanner) {
     }
 
     private fun checkSurrounding(matrix: List<String>, row: Int, col: Int, size: Int): Boolean {
-        for (i in 0..<size) {
-            for (r in -1..1) {
-                for (c in -1..1) {
-                    val x = row + r
-                    val y = i + col + c
-                    if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.size) {
-                        val cell = matrix[x][y]
-                        if (!cell.isDigit() && cell != '.') {
-                            return true
-                        }
-                    }
-                }
+        for ((cell) in getSurrounding(matrix, row, col, size)) {
+            if (!cell.isDigit() && cell != '.') {
+                return true
             }
         }
         return false
@@ -78,20 +69,25 @@ class Day(val input: Scanner) {
     }
 
     private fun getGearCoords(matrix: List<String>, row: Int, col: Int, size: Int): Pair<Int, Int>? {
+        for ((cell, x, y) in getSurrounding(matrix, row, col, size)) {
+            if (cell == '*') {
+                return x to y
+            }
+        }
+        return null
+    }
+
+    private fun getSurrounding(matrix: List<String>, row: Int, col: Int, size: Int) = sequence {
         for (i in 0..<size) {
             for (r in -1..1) {
                 for (c in -1..1) {
                     val x = row + r
                     val y = i + col + c
                     if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.size) {
-                        val cell = matrix[x][y]
-                        if (cell == '*') {
-                            return x to y
-                        }
+                        yield(Triple(matrix[x][y], x, y))
                     }
                 }
             }
         }
-        return null
     }
 }
