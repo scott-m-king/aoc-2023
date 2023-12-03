@@ -24,7 +24,7 @@ class Day(val input: Scanner) {
                 } else {
                     val num = sb.toString().toIntOrNull()
                     if (num != null) {
-                        if (checkSurrounding1(input, row, col - sb.length, sb.length)) {
+                        if (checkSurrounding(input, row, col - sb.length, sb.length)) {
                             result += num
                         }
                     }
@@ -36,8 +36,7 @@ class Day(val input: Scanner) {
         return result
     }
 
-    private fun checkSurrounding1(matrix: List<String>, row: Int, col: Int, size: Int): Boolean {
-//        println("row: $row, col: $col, size: $size")
+    private fun checkSurrounding(matrix: List<String>, row: Int, col: Int, size: Int): Boolean {
         for (i in 0..<size) {
             for (r in -1..1) {
                 for (c in -1..1) {
@@ -69,11 +68,8 @@ class Day(val input: Scanner) {
                     if (num != null) {
                         val gearCoords = getGearCoords(input, row, col - sb.length, sb.length)
                         if (gearCoords != null) {
-                            if (gears.containsKey(gearCoords)) {
-                                gears[gearCoords]?.add(num)
-                            } else {
-                                gears[gearCoords] = mutableListOf(num)
-                            }
+                            gears.putIfAbsent(gearCoords, mutableListOf())
+                            gears[gearCoords]?.add(num)
                         }
                     }
                     sb.clear()
@@ -88,7 +84,6 @@ class Day(val input: Scanner) {
     }
 
     private fun getGearCoords(matrix: List<String>, row: Int, col: Int, size: Int): Pair<Int, Int>? {
-//        println("row: $row, col: $col, size: $size")
         for (i in 0..<size) {
             for (r in -1..1) {
                 for (c in -1..1) {
