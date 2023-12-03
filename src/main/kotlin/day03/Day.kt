@@ -63,7 +63,7 @@ class Day(val input: Scanner) {
         return gears
             .filter { it.value.size == 2 }
             .map { it.value }
-            .sumOf { it.fold(1) { acc, curr -> acc * curr }.toInt() }
+            .sumOf { it.reduce { acc, curr -> acc * curr }.toInt() }
     }
 
     private fun getGearCoords(matrix: List<String>, row: Int, col: Int, size: Int): Pair<Int, Int>? {
