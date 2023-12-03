@@ -5,15 +5,9 @@ import java.lang.StringBuilder
 import java.util.Scanner
 
 class Day(val input: Scanner) {
-    private lateinit var symbols: Set<Char>
 
     fun starOne(): Int {
         val input = parseInput(input).toList()
-
-        symbols = input.map { it -> it.filter { !it.isDigit() && it != '.' }.toList() }
-            .flatten()
-            .toSet()
-
         var result = 0
 
         input.forEachIndexed { row, line ->
@@ -44,7 +38,7 @@ class Day(val input: Scanner) {
                     val y = i + col + c
                     if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.size) {
                         val cell = matrix[x][y]
-                        if (symbols.contains(cell)) {
+                        if (!cell.isDigit() && cell != '.') {
                             return true
                         }
                     }
@@ -59,12 +53,12 @@ class Day(val input: Scanner) {
         val gears: MutableMap<Pair<Int, Int>, MutableList<Int>> = HashMap()
 
         input.forEachIndexed { row, line ->
-            val sb = StringBuilder()
+            var sb = ""
             "$line.".forEachIndexed { col, char ->
-                if (char.isDigit()) {
-                    sb.append(char)
+                sb = if (char.isDigit()) {
+                    "${sb}${char}"
                 } else {
-                    val num = sb.toString().toIntOrNull()
+                    val num = sb.toIntOrNull()
                     if (num != null) {
                         val gearCoords = getGearCoords(input, row, col - sb.length, sb.length)
                         if (gearCoords != null) {
@@ -72,7 +66,7 @@ class Day(val input: Scanner) {
                             gears[gearCoords]?.add(num)
                         }
                     }
-                    sb.clear()
+                    ""
                 }
             }
         }
