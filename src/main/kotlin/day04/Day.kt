@@ -4,22 +4,19 @@ import parseInput
 import java.util.Scanner
 
 class Day(val input: Scanner) {
-    fun starOne(): Int = getRounds(input).sumOf {
+    fun starOne(): Int = getMatchingNums(input).sumOf {
         it.fold(0) { result, _ -> if (result == 0) 1 else result * 2 }.toInt()
     }
 
     fun starTwo(): Int {
-        val rounds = getRounds(input).toList()
-        val allCards = IntArray(rounds.size) { 1 }
-
-        rounds.forEachIndexed { index, intersection ->
-            intersection.forEachIndexed { i, _ -> allCards[index + i + 1] += allCards[index] }
-        }
-
-        return allCards.sum()
+        val rounds = getMatchingNums(input).toList()
+        return rounds.foldIndexed(IntArray(rounds.size) { 1 }) { index, acc, intersection ->
+            intersection.forEachIndexed { i, _ -> acc[index + i + 1] += acc[index] }
+            acc
+        }.sum()
     }
 
-    private fun getRounds(input: Scanner) = parseInput(input)
+    private fun getMatchingNums(input: Scanner) = parseInput(input)
         .map { it.split("|") }
         .map { (left, right) ->
             left.split(":")[1].split(" ").filter { it.isNotEmpty() }.toSet()
