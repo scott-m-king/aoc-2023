@@ -1,6 +1,5 @@
 package day04
 
-import com.sun.xml.internal.fastinfoset.util.StringArray
 import parseInput
 import java.util.Scanner
 
