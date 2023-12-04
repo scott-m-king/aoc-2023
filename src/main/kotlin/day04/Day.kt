@@ -15,10 +15,8 @@ class Day(val input: Scanner) {
         val allCards = IntArray(rounds.size) { 1 }
 
         rounds.forEachIndexed { index, (card, winningNums) ->
-            val intersect = card.toSet().intersect(winningNums.toSet())
-            val copies = allCards[index]
-            for (i in 1..intersect.size) {
-                allCards[index + i] += copies
+            card.toSet().intersect(winningNums.toSet()).forEachIndexed { i, _ ->
+                allCards[index + i + 1] += allCards[index]
             }
         }
 
