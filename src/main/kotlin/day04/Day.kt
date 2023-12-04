@@ -1,5 +1,6 @@
 package day04
 
+import com.sun.xml.internal.fastinfoset.util.StringArray
 import parseInput
 import java.util.Scanner
 
@@ -31,6 +32,26 @@ class Day(val input: Scanner) {
     }
 
     fun starTwo(): Int {
-        TODO()
+        val rounds = parseInput(input)
+            .map { it.split("|") }
+            .map { (left, right) ->
+                listOf(
+                    left.split(":")[1].split(" ").filter { it.isNotEmpty() },
+                    right.split(" ").filter { it.isNotEmpty() }
+                )
+            }
+            .toList()
+
+        val allCards = IntArray(rounds.size) { 1 }
+
+        rounds.forEachIndexed { index, (card, winningNums) ->
+            val intersect = card.toSet().intersect(winningNums.toSet())
+            val copies = allCards[index]
+            for (i in 1..intersect.size) {
+                allCards[index + i] += copies
+            }
+        }
+
+        return allCards.sum()
     }
 }
