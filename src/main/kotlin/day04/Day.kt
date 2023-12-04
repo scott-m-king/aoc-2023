@@ -5,43 +5,14 @@ import parseInput
 import java.util.Scanner
 
 class Day(val input: Scanner) {
-    fun starOne(): Int {
-        val rounds = parseInput(input)
-            .map { it.split("|") }
-            .map { (left, right) ->
-                listOf(
-                    left.split(":")[1].split(" ").filter { it.isNotEmpty() },
-                    right.split(" ").filter { it.isNotEmpty() }
-                )
-            }
-            .toList()
-
-        var result = 0
-        for ((card, winningNums) in rounds) {
-            val intersect = card.toSet().intersect(winningNums.toSet())
-            if (intersect.isNotEmpty()) {
-                var curr = 1
-                for (i in 0..<intersect.size - 1) {
-                    curr *= 2
-                }
-                result += curr
-            }
-        }
-
-        return result
+    fun starOne(): Int = getRounds(input).sumOf { (card, winningNums) ->
+        card.toSet().intersect(winningNums.toSet()).fold(0) { result, _ ->
+            if (result == 0) 1 else result * 2
+        }.toInt()
     }
 
     fun starTwo(): Int {
-        val rounds = parseInput(input)
-            .map { it.split("|") }
-            .map { (left, right) ->
-                listOf(
-                    left.split(":")[1].split(" ").filter { it.isNotEmpty() },
-                    right.split(" ").filter { it.isNotEmpty() }
-                )
-            }
-            .toList()
-
+        val rounds = getRounds(input).toList()
         val allCards = IntArray(rounds.size) { 1 }
 
         rounds.forEachIndexed { index, (card, winningNums) ->
@@ -54,4 +25,13 @@ class Day(val input: Scanner) {
 
         return allCards.sum()
     }
+
+    private fun getRounds(input: Scanner) = parseInput(input)
+        .map { it.split("|") }
+        .map { (left, right) ->
+            listOf(
+                left.split(":")[1].split(" ").filter { it.isNotEmpty() },
+                right.split(" ").filter { it.isNotEmpty() }
+            )
+        }
 }
