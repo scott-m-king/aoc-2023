@@ -8,9 +8,8 @@ class Day(val input: Scanner) {
         it.fold(0) { result, _ -> if (result == 0) 1 else result * 2 }.toInt()
     }
 
-    fun starTwo(): Int {
-        val rounds = getMatchingNums(input).toList()
-        return rounds.foldIndexed(IntArray(rounds.size) { 1 }) { index, acc, intersection ->
+    fun starTwo(): Int = getMatchingNums(input).toList().let {
+        it.foldIndexed(IntArray(it.size) { 1 }) { index, acc, intersection ->
             intersection.forEachIndexed { i, _ -> acc[index + i + 1] += acc[index] }
             acc
         }.sum()
