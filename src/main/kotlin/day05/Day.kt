@@ -29,38 +29,34 @@ class Day(val input: Scanner) {
             }
             acc.last().add(curr)
             acc
-        }.fold(mutableMapOf<String, Map<Long, Long>>()) { acc, curr ->
+        }.fold(mutableMapOf<String, List<List<Long>>>()) { acc, curr ->
             val key = curr[0].split(" ")[0].split("-to-")[1]
             val mappings = curr.drop(1).map {
-                it.split(" ").filter(String::isNotEmpty).let { mapping ->
-                    println(mapping)
-                    val (dest, source, range) = mapping.map(String::toLong)
-                    listOf(dest, source, range)
-                }
+                it.split(" ").filter(String::isNotEmpty).map(String::toLong)
             }
-            val map = mutableMapOf<Long, Long>()
-            mappings.forEach { (dest, source, range) ->
-                (0..<range).forEach { map[source + it] = dest + it }
-            }
-            acc[key] = map
+            acc[key] = mappings
             acc
         }
-        return 0
+        var minLocation = Long.MAX_VALUE
+        var position: String? = "soil"
 
-//        var minLocation = Long.MAX_VALUE
-//        var position: String? = "soil"
-//
-//        for (seed in seeds) {
-//            var curr = seed
-//            while (position != null) {
-//                curr = maps[position]!!.getOrDefault(curr, curr)
-//                position = positionMapping[position]
-//            }
-//            position = "soil"
-//            minLocation = minOf(minLocation, curr)
-//        }
-//
-//        return minLocation
+        for (i in seeds.indices) {
+            var curr = seeds[i]
+            while (position != null) {
+                for ((dest, source, range) in maps[position]!!) {
+                    if (curr >= source && curr <= source + range) {
+                        println("curr: $curr, source: $source, dest: $dest, range: $range, result: ${curr - source + dest}")
+                        curr = (curr - source) + dest
+                        break
+                    }
+                }
+                position = positionMapping[position]
+            }
+            position = "soil"
+            minLocation = minOf(minLocation, curr)
+        }
+
+        return minLocation
     }
 
     fun starTwo(): Int {
