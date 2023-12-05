@@ -45,7 +45,6 @@ class Day(val input: Scanner) {
             while (position != null) {
                 for ((dest, source, range) in maps[position]!!) {
                     if (curr >= source && curr <= source + range) {
-                        println("curr: $curr, source: $source, dest: $dest, range: $range, result: ${curr - source + dest}")
                         curr = (curr - source) + dest
                         break
                     }
