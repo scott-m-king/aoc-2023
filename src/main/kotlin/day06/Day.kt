@@ -5,8 +5,7 @@ import java.util.Scanner
 
 class Day(val input: Scanner) {
     fun starOne(): Int = parseInput(input).map { it.split(" ").filter(String::isNotEmpty).drop(1) }
-        .toList()
-        .let { (times, distances) ->
+        .toList().let { (times, distances) ->
             times.foldIndexed(1) { i, acc, _ ->
                 val time = times[i].toInt()
                 val distance = distances[i].toInt()
