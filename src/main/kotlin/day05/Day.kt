@@ -15,6 +15,62 @@ class Day(val input: Scanner) {
     )
 
     fun starOne(): Long {
+        val (seeds, maps) = getSeedsAndMaps(input)
+
+        var minLocation = Long.MAX_VALUE
+        var position: String? = "soil"
+
+        for (i in seeds.indices) {
+            var curr = seeds[i]
+            while (position != null) {
+                for ((dest, source, range) in maps[position]!!) {
+                    if (curr >= source && curr <= source + range) {
+                        curr = (curr - source) + dest
+                        break
+                    }
+                }
+                position = positionMapping[position]
+            }
+            position = "soil"
+            minLocation = minOf(minLocation, curr)
+        }
+
+        return minLocation
+    }
+
+    // wrong: 12367984
+    fun starTwo(): Long {
+        val (seeds, maps) = getSeedsAndMaps(input)
+        val ranges = seeds.chunked(2)
+
+        var minLocation = Long.MAX_VALUE
+        var position: String? = "soil"
+
+        for ((start, len) in ranges) {
+            (0..<len).forEach {
+                var curr = start + it
+                while (position != null) {
+                    for ((dest, source, range) in maps[position]!!) {
+//                        println("location: $position, seed: ${start + it} curr: $curr, source: $source, dest: $dest, range: $range, result: ${curr - source + dest}")
+                        if (curr >= source && curr <= source + range) {
+                            curr = (curr - source) + dest
+                            break
+                        }
+                    }
+                    position = positionMapping[position]
+//                    println("location: $position, seed: ${start + it} curr: $curr")
+                }
+                minLocation = minOf(minLocation, curr)
+//                println("value: $curr")
+                position = "soil"
+            }
+//            println(minLocation)
+        }
+
+        return minLocation
+    }
+
+    private fun getSeedsAndMaps(input: Scanner): Pair<List<Long>, MutableMap<String, List<List<Long>>>> {
         val lines = parseInput(input).toList()
         val seeds = lines[0]
             .split(":")[1].split(" ")
@@ -37,28 +93,7 @@ class Day(val input: Scanner) {
             acc[key] = mappings
             acc
         }
-        var minLocation = Long.MAX_VALUE
-        var position: String? = "soil"
 
-        for (i in seeds.indices) {
-            var curr = seeds[i]
-            while (position != null) {
-                for ((dest, source, range) in maps[position]!!) {
-                    if (curr >= source && curr <= source + range) {
-                        curr = (curr - source) + dest
-                        break
-                    }
-                }
-                position = positionMapping[position]
-            }
-            position = "soil"
-            minLocation = minOf(minLocation, curr)
-        }
-
-        return minLocation
-    }
-
-    fun starTwo(): Int {
-        TODO()
+        return seeds to maps
     }
 }
