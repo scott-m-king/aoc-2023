@@ -57,10 +57,10 @@ object `Day 06` {
 
 object `Day 07` {
     @Test
-    fun `★`() = day07.Day(inputScanner(7)).starOne()
+    fun `★`() = assertEquals(248105065, day07.Day(inputScanner(7)).starOne())
 
     @Test
-    fun `★★`() = day07.Day(inputScanner(7)).starTwo()
+    fun `★★`() = assertEquals(5905, day07.Day(inputScanner(7)).starTwo())
 }
 
 object `Day 08` {
