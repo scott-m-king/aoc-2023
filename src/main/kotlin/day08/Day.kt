@@ -4,29 +4,30 @@ import parseInput
 import java.util.Scanner
 
 class Day(val input: Scanner) {
+    private lateinit var originalInstruction: String;
+    private lateinit var nodes: Map<String, Pair<String, String>>;
+
     fun starOne(): Int {
         val (instruction, network) = parseInput(input).toList().let { it.first() to it.drop(2) }
-        val nodes = network.fold(mutableMapOf<String, Pair<String, String>>()) { acc, curr ->
+        originalInstruction = instruction
+        nodes = network.fold(mutableMapOf()) { acc, curr ->
             val (key, value) = curr.split(" = ")
             val edges = value.split(", ").run { first().replace("(", "") to elementAt(1).replace(")", "") }
             acc[key] = edges
             acc
         }
 
-        var steps = 0
-        var position = "AAA"
+        return countSteps("AAA", instruction)
+    }
 
-        while (position != "ZZZ") {
-            instruction.forEach {
-                when (it) {
-                    'L' -> position = nodes[position]!!.first
-                    'R' -> position = nodes[position]!!.second
-                }
-                steps++
-            }
+    private tailrec fun countSteps(position: String, instruction: String, count: Int = 0): Int {
+        if (position == "ZZZ") return count
+        if (instruction.isEmpty()) return countSteps(position, originalInstruction, count)
+        val nextPos = when (instruction.first()) {
+            'L' -> nodes[position]!!.first
+            else -> nodes[position]!!.second
         }
-
-        return steps
+        return countSteps(nextPos, instruction.drop(1), count + 1)
     }
 
     fun starTwo(): Int {
