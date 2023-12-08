@@ -12,8 +12,7 @@ class Day(val input: Scanner) {
         originalInstruction = instruction
         nodes = network.fold(mutableMapOf()) { acc, curr ->
             val (key, value) = curr.split(" = ")
-            val edges = value.split(", ").run { first().replace("(", "") to elementAt(1).replace(")", "") }
-            acc[key] = edges
+            acc[key] = value.split(", ").run { first().replace("(", "") to elementAt(1).replace(")", "") }
             acc
         }
 
@@ -21,8 +20,10 @@ class Day(val input: Scanner) {
     }
 
     private tailrec fun countSteps(position: String, instruction: String, count: Int = 0): Int {
-        if (position == "ZZZ") return count
-        if (instruction.isEmpty()) return countSteps(position, originalInstruction, count)
+        when {
+            position == "ZZZ" -> return count
+            instruction.isEmpty() -> return countSteps(position, originalInstruction, count)
+        }
         val nextPos = when (instruction.first()) {
             'L'  -> nodes[position]!!.first
             else -> nodes[position]!!.second
