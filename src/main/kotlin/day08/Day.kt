@@ -4,8 +4,8 @@ import parseInput
 import java.util.Scanner
 
 class Day(val input: Scanner) {
-    private lateinit var originalInstruction: String;
-    private lateinit var nodes: Map<String, Pair<String, String>>;
+    private lateinit var originalInstruction: String
+    private lateinit var nodes: Map<String, Pair<String, String>>
 
     fun starOne(): Int {
         val (instruction, network) = parseInput(input).toList().let { it.first() to it.drop(2) }
@@ -24,7 +24,7 @@ class Day(val input: Scanner) {
         if (position == "ZZZ") return count
         if (instruction.isEmpty()) return countSteps(position, originalInstruction, count)
         val nextPos = when (instruction.first()) {
-            'L' -> nodes[position]!!.first
+            'L'  -> nodes[position]!!.first
             else -> nodes[position]!!.second
         }
         return countSteps(nextPos, instruction.drop(1), count + 1)
