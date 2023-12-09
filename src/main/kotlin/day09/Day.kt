@@ -10,13 +10,12 @@ class Day(val input: Scanner) {
 
     private fun generateDifferences(
         nums: List<Int>,
-        result: MutableList<List<Int>> = mutableListOf(nums)
+        result: List<List<Int>> = mutableListOf(nums)
     ): List<List<Int>> = when {
         nums.all { it == 0 } -> result
-        else                 -> (1..<nums.size).fold(mutableListOf()) { acc: MutableList<Int>, i ->
-            acc.add(nums[i] - nums[i - 1])
-            acc
-        }.let { generateDifferences(it, result.apply { add(it) }) }
+        else                 -> (1..<nums.size)
+            .fold(listOf()) { acc: List<Int>, i -> acc + listOf(nums[i] - nums[i - 1]) }
+            .let { diffs -> generateDifferences(diffs, result + listOf(diffs)) }
     }
 
     fun starTwo(): Int {
