@@ -4,21 +4,14 @@ import parseInput
 import java.util.Scanner
 
 class Day(val input: Scanner) {
-    fun starOne(): Int {
-        val lines = parseInput(input).map { it -> it.split(" ").map { it.toInt() } }.toList()
-        val res = lines.map(::generateDifferences)
+    fun starOne(): Int = parseInput(input).map { it -> it.split(" ").map { it.toInt() } }.toList()
+        .map(::generateDifferences)
+        .sumOf { row -> row.reversed().sumOf { it.last() } }
 
-        var sum = 0
-        res.forEach {
-            it.indices.reversed().forEach { i ->
-                sum += it[i].last()
-            }
-        }
-
-        return sum
-    }
-
-    private fun generateDifferences(nums: List<Int>, result: MutableList<List<Int>> = mutableListOf(nums)): List<List<Int>> {
+    private fun generateDifferences(
+        nums: List<Int>,
+        result: MutableList<List<Int>> = mutableListOf(nums)
+    ): List<List<Int>> {
         if (nums.all { it == 0 }) return result
 
         val differences: MutableList<Int> = mutableListOf()
