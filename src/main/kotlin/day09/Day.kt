@@ -6,8 +6,8 @@ import java.util.Scanner
 class Day(val input: Scanner) {
     fun starOne(): Int = getHistories(input).sumOf { history -> history.reversed().sumOf { it.last() } }
 
-    fun starTwo(): Int = getHistories(input).sumOf { history ->
-        (1..<history.size).reversed().fold(0) { acc, i -> history[i - 1].first() - acc }.toInt()
+    fun starTwo(): Int = getHistories(input).sumOf {
+        (1..<it.size).reversed().fold(0) { acc, i -> it[i - 1].first() - acc }.toInt()
     }
 
     private fun getHistories(input: Scanner) =
