@@ -11,14 +11,12 @@ class Day(val input: Scanner) {
     private fun generateDifferences(
         nums: List<Int>,
         result: MutableList<List<Int>> = mutableListOf(nums)
-    ): List<List<Int>> {
-        if (nums.all { it == 0 }) return result
-
-        val differences: MutableList<Int> = mutableListOf()
-        (1..<nums.size).forEach { differences.add(nums[it] - nums[it - 1]) }
-        result.add(differences)
-
-        return generateDifferences(differences, result)
+    ): List<List<Int>> = when {
+        nums.all { it == 0 } -> result
+        else                 -> (1..<nums.size).fold(mutableListOf()) { acc: MutableList<Int>, i ->
+            acc.add(nums[i] - nums[i - 1])
+            acc
+        }.let { generateDifferences(it, result.apply { add(it) }) }
     }
 
     fun starTwo(): Int {
