@@ -18,6 +18,6 @@ class Day(val input: Scanner) {
             nums.all { it == 0 } -> result
             else                 -> (1..<nums.size)
                 .fold(listOf<Int>()) { acc, i -> acc + listOf(nums[i] - nums[i - 1]) }
-                .let { diffs -> generateDifferences(diffs, result + listOf(diffs)) }
+                .let { generateDifferences(it, result + listOf(it)) }
         }
 }
