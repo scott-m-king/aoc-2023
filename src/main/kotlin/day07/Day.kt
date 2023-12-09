@@ -76,5 +76,4 @@ class Day(val input: Scanner) {
         values.filter { it == 2 }.size == 1  -> 2
         else                                 -> 1
     }
-
 }

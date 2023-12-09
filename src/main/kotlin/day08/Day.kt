@@ -21,7 +21,7 @@ class Day(val input: Scanner) {
 
     private tailrec fun countSteps(position: String, instruction: String, count: Int = 0): Int {
         when {
-            position == "ZZZ" -> return count
+            position == "ZZZ"     -> return count
             instruction.isEmpty() -> return countSteps(position, originalInstruction, count)
         }
         val nextPos = when (instruction.first()) {
