@@ -20,10 +20,10 @@ class Day(val input: Scanner) {
             row++
         }
 
-        return dfs(startingPos, grid, listOf(startingPos)).size / 2
+        return dfs(startingPos, grid, setOf(startingPos)).size / 2
     }
 
-    private fun getNextPos(pos: Pair<Int, Int>, grid: List<CharArray>, loop: List<Pair<Int, Int>>): Pair<Int, Int> {
+    private fun getNextPos(pos: Pair<Int, Int>, grid: List<CharArray>, loop: Set<Pair<Int, Int>>): Pair<Int, Int> {
         val currCell = grid[pos.first][pos.second]
         val (currRow, currCol) = pos
         val (up, down, left, right) = dirs
@@ -60,8 +60,8 @@ class Day(val input: Scanner) {
     private tailrec fun dfs(
         currentPos: Pair<Int, Int>,
         grid: List<CharArray>,
-        loop: List<Pair<Int, Int>>
-    ): List<Pair<Int, Int>> {
+        loop: Set<Pair<Int, Int>>
+    ): Set<Pair<Int, Int>> {
         val (row, col) = currentPos
         if (isOob(row, col, grid)) return loop
         val next = getNextPos(currentPos, grid, loop)
