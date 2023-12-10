@@ -8,19 +8,35 @@ class Day(val input: Scanner) {
 
     fun starOne(): Int {
         val grid = parseInput(input).toList().map(String::toCharArray)
-        var startingPos: Pair<Int, Int>? = null;
-        var row = 0
-        while (startingPos == null) {
+        val startingPos = getStartingPos(grid)
+        return dfs(startingPos, grid, setOf(startingPos)).size / 2
+    }
+
+    fun starTwo(): Int {
+        val grid = parseInput(input).toList().map(String::toCharArray)
+        val startingPos = getStartingPos(grid)
+        val loop = dfs(startingPos, grid, setOf(startingPos))
+        printLoop(grid, loop)
+
+//        for (r in grid.indices) {
+//            for (c in grid[0].indices) {
+//                if (loop.contains(r to c)) {
+//                    grid[r][c] = 'x'
+//                }
+//            }
+//        }
+        return 0
+    }
+
+    private fun getStartingPos(grid: List<CharArray>): Pair<Int, Int> {
+        for (row in grid.indices) {
             for (col in grid[row].indices) {
                 if (grid[row][col] == 'S') {
-                    startingPos = row to col
-                    break
+                    return row to col
                 }
             }
-            row++
         }
-
-        return dfs(startingPos, grid, setOf(startingPos)).size / 2
+        return 0 to 0
     }
 
     private fun getNextPos(pos: Pair<Int, Int>, grid: List<CharArray>, loop: Set<Pair<Int, Int>>): Pair<Int, Int> {
@@ -43,8 +59,10 @@ class Day(val input: Scanner) {
             val (row, col) = dir
             val nextPos = currRow + row to currCol + col
 
+
             val (nextRow, nextCol) = nextPos
-            if (loop.isNotEmpty() && loop.contains(nextPos)) continue
+//            println("currCell: $currCell, dir: $dir, nextPos: $nextPos, nextCell: $nextCell")
+            if (loop.isNotEmpty() && loop.contains(nextPos) || isOob(nextRow, nextCol, grid)) continue
             val nextCell = grid[nextRow][nextCol]
 
             when (dir) {
@@ -55,6 +73,18 @@ class Day(val input: Scanner) {
             }
         }
         return 0 to 0
+    }
+
+    private fun printLoop(grid: List<CharArray>, loop: Set<Pair<Int, Int>>) {
+        for (r in grid.indices) {
+            for (c in grid[0].indices) {
+                if (loop.contains(r to c)) {
+                    grid[r][c] = 'x'
+                }
+            }
+        }
+        grid.map { String(it).also(::println) }
+
     }
 
     private tailrec fun dfs(
@@ -70,9 +100,5 @@ class Day(val input: Scanner) {
     }
 
     private fun isOob(row: Int, col: Int, grid: List<CharArray>) =
-        row < 0 || col < 0 || row >= grid[0].size || col >= grid.size
-
-    fun starTwo(): Int {
-        TODO()
-    }
+        row < 0 || col < 0 || row >= grid.size || col >= grid[0].size
 }
