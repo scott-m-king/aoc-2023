@@ -40,11 +40,9 @@ class Day(val input: Scanner) {
     }
 
     private fun getNextPos(pos: Pair<Int, Int>, grid: List<CharArray>, loop: Set<Pair<Int, Int>>): Pair<Int, Int> {
-        val currCell = grid[pos.first][pos.second]
         val (currRow, currCol) = pos
         val (up, down, left, right) = dirs
-
-        val possibleDirs = when (currCell) {
+        when (grid[currRow][currCol]) {
             'S'  -> listOf(up, down, left, right)
             '|'  -> listOf(up, down)
             '-'  -> listOf(left, right)
@@ -53,19 +51,13 @@ class Day(val input: Scanner) {
             '7'  -> listOf(down, left)
             'F'  -> listOf(down, right)
             else -> listOf()
-        }
+        }.forEach {
+            val nextPos = currRow + it.first to currCol + it.second
+            if (loop.isNotEmpty() && loop.contains(nextPos) || isOob(nextPos, grid)) return@forEach
 
-        for (dir in possibleDirs) {
-            val (row, col) = dir
-            val nextPos = currRow + row to currCol + col
+            val nextCell = grid[nextPos.first][nextPos.second]
 
-
-            val (nextRow, nextCol) = nextPos
-//            println("currCell: $currCell, dir: $dir, nextPos: $nextPos, nextCell: $nextCell")
-            if (loop.isNotEmpty() && loop.contains(nextPos) || isOob(nextRow, nextCol, grid)) continue
-            val nextCell = grid[nextRow][nextCol]
-
-            when (dir) {
+            when (it) {
                 up    -> if (listOf('|', '7', 'F').contains(nextCell)) return nextPos
                 down  -> if (listOf('|', 'J', 'L').contains(nextCell)) return nextPos
                 left  -> if (listOf('-', 'L', 'F').contains(nextCell)) return nextPos
@@ -84,7 +76,6 @@ class Day(val input: Scanner) {
             }
         }
         grid.map { String(it).also(::println) }
-
     }
 
     private tailrec fun dfs(
@@ -92,13 +83,12 @@ class Day(val input: Scanner) {
         grid: List<CharArray>,
         loop: Set<Pair<Int, Int>>
     ): Set<Pair<Int, Int>> {
-        val (row, col) = currentPos
-        if (isOob(row, col, grid)) return loop
+        if (isOob(currentPos, grid)) return loop
         val next = getNextPos(currentPos, grid, loop)
         if (next == 0 to 0) return loop
         return dfs(next, grid, loop + next)
     }
 
-    private fun isOob(row: Int, col: Int, grid: List<CharArray>) =
-        row < 0 || col < 0 || row >= grid.size || col >= grid[0].size
+    private fun isOob(pos: Pair<Int, Int>, grid: List<CharArray>) =
+        pos.first < 0 || pos.second < 0 || pos.first >= grid.size || pos.second >= grid[0].size
 }
