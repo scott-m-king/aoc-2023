@@ -19,9 +19,7 @@ class Day(val input: Scanner) {
             if (startingPos != null) break
         }
 
-        val next = getNextPos(startingPos!!, grid, listOf())
-        val loop = dfs(next, grid, listOf(startingPos, next))
-        return loop.size / 2
+        return dfs(startingPos!!, grid, listOf(startingPos)).size / 2
     }
 
     private fun getNextPos(pos: Pair<Int, Int>, grid: List<CharArray>, loop: List<Pair<Int, Int>>): Pair<Int, Int> {
@@ -69,7 +67,7 @@ class Day(val input: Scanner) {
         loop: List<Pair<Int, Int>>
     ): List<Pair<Int, Int>> {
         val (row, col) = currentPos
-        if (isOob(row, col, grid) || grid[row][col] == 'S') return loop
+        if (isOob(row, col, grid)) return loop
         val next = getNextPos(currentPos, grid, loop)
         if (next == 0 to 0) return loop
         return dfs(next, grid, loop + next)
