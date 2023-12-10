@@ -9,17 +9,18 @@ class Day(val input: Scanner) {
     fun starOne(): Int {
         val grid = parseInput(input).toList().map(String::toCharArray)
         var startingPos: Pair<Int, Int>? = null;
-        for (row in grid.indices) {
+        var row = 0
+        while (startingPos == null) {
             for (col in grid[row].indices) {
                 if (grid[row][col] == 'S') {
                     startingPos = row to col
                     break
                 }
             }
-            if (startingPos != null) break
+            row++
         }
 
-        return dfs(startingPos!!, grid, listOf(startingPos)).size / 2
+        return dfs(startingPos, grid, listOf(startingPos)).size / 2
     }
 
     private fun getNextPos(pos: Pair<Int, Int>, grid: List<CharArray>, loop: List<Pair<Int, Int>>): Pair<Int, Int> {
@@ -38,18 +39,13 @@ class Day(val input: Scanner) {
             else -> listOf()
         }
 
-//        println("currCell: $currCell, pos: $pos, possibleDirs: $possibleDirs")
-
         for (dir in possibleDirs) {
             val (row, col) = dir
             val nextPos = currRow + row to currCol + col
 
             val (nextRow, nextCol) = nextPos
             if (loop.isNotEmpty() && loop.contains(nextPos)) continue
-//            println("loop: ${if (loop.isNotEmpty()) loop.last() else null}, nextPos: $nextPos")
-
             val nextCell = grid[nextRow][nextCol]
-//            println("loop: $loop, nextCell: $nextCell, dir: $dir")
 
             when (dir) {
                 up    -> if (listOf('|', '7', 'F').contains(nextCell)) return nextPos
