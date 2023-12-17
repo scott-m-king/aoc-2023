@@ -5,6 +5,7 @@ import java.util.Scanner
 
 class Day(val input: Scanner) {
     private val dirs = listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1) // up, down, left, right
+    private val mazeChars = setOf('╬', '║', '═', '╚', '╝', '╗', '╔', 'x', ' ')
 
     fun starOne(): Int {
         val grid = parseInput(input).toList().map(String::toCharArray)
@@ -16,16 +17,21 @@ class Day(val input: Scanner) {
         val grid = parseInput(input).toList().map(String::toCharArray)
         val startingPos = getStartingPos(grid)
         val loop = dfs(startingPos, grid, setOf(startingPos))
-        printLoop(grid, loop)
-
-//        for (r in grid.indices) {
-//            for (c in grid[0].indices) {
-//                if (loop.contains(r to c)) {
-//                    grid[r][c] = 'x'
-//                }
-//            }
-//        }
+        visualizeLoop(grid, loop)
+        dfs2(0 to 0, grid)
+        grid.map { String(it).also(::println) }
         return 0
+    }
+
+
+    private fun dfs2(pos: Pair<Int, Int>, grid: List<CharArray>) {
+        if (isOob(pos, grid) || mazeChars.contains(grid[pos.first][pos.second])) return
+        grid[pos.first][pos.second] = ' '
+
+        for ((row, col) in dirs) {
+            val nextPos = pos.first + row to pos.second + col
+            dfs2(nextPos, grid)
+        }
     }
 
     private fun getStartingPos(grid: List<CharArray>): Pair<Int, Int> {
@@ -67,11 +73,20 @@ class Day(val input: Scanner) {
         return 0 to 0
     }
 
-    private fun printLoop(grid: List<CharArray>, loop: Set<Pair<Int, Int>>) {
+    private fun visualizeLoop(grid: List<CharArray>, loop: Set<Pair<Int, Int>>) {
         for (r in grid.indices) {
             for (c in grid[0].indices) {
                 if (loop.contains(r to c)) {
-                    grid[r][c] = 'x'
+                    grid[r][c] = when (grid[r][c]) {
+                        'S'  -> '╬'
+                        '|'  -> '║'
+                        '-'  -> '═'
+                        'L'  -> '╚'
+                        'J'  -> '╝'
+                        '7'  -> '╗'
+                        'F'  -> '╔'
+                        else -> 'x'
+                    }
                 }
             }
         }
